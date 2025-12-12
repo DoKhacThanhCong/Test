@@ -4,6 +4,7 @@ import ast
 import tempfile
 import random
 import resend
+import requests
 import time
 import csv
 from datetime import datetime
@@ -77,17 +78,26 @@ bookings_db = []
 # HÀM HỖ TRỢ
 # -------------------------
 def send_email(to_email, subject, html_content):
+    url = "https://api.resend.com/emails"
+    
+    headers = {
+        "Authorization": f"Bearer {RESEND_API_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    data = {
+        "from": "Hotel Pinder <noreply@hotelpinder.com>",
+        "to": [to_email],
+        "subject": subject,
+        "html": html_content
+    }
+
     try:
-        params = {
-            "from": "Hotel Pinder <onboarding@resend.dev>",
-            "to": [to_email],
-            "subject": subject,
-            "html": html_content
-        }
-        resend.Emails.send(params)
-        return True
+        response = requests.post(url, headers=headers, json=data)
+        print("Resend response:", response.text)
+        return response.status_code == 200
     except Exception as e:
-        print("Error sending email:", e)
+        print("Lỗi Resend:", e)
         return False
         
 def get_user_rank(total_spent):
@@ -2213,6 +2223,7 @@ def check_status(booking_code):
 # === KHỞI CHẠY APP ===
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 
