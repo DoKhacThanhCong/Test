@@ -15,7 +15,7 @@ import google.generativeai as genai
 from flask import send_from_directory
 
 app = Flask(__name__)
-resend.api_key = os.getenv("RESEND_API_KEY")
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 @app.route('/data/<path:filename>')
 def data_files(filename):
     return send_from_directory('data', filename)
@@ -2223,6 +2223,7 @@ def check_status(booking_code):
 # === KHỞI CHẠY APP ===
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 
